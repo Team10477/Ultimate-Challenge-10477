@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -16,6 +17,8 @@ public class Test_Drive extends OpMode {
     DcMotor leftBack;
     DcMotor rightBack;
 
+    RevColorSensorV3 leftColorSensor;
+    RevColorSensorV3 rightColorSensor;
 
     @Override
     public void init() {
@@ -25,7 +28,10 @@ public class Test_Drive extends OpMode {
         leftFront = hardwareMap.get(DcMotor.class, "left_front");
         rightFront = hardwareMap.get(DcMotor.class, "right_front");
 
-      leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftColorSensor = hardwareMap.get(RevColorSensorV3.class, "color_sensor");
+        rightColorSensor = hardwareMap.get(RevColorSensorV3.class,"color_sensor_front");
+
+        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -36,6 +42,8 @@ public class Test_Drive extends OpMode {
         leftBack.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         rightBack.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
 
+        leftColorSensor.enableLed(true);
+        rightColorSensor.enableLed(true);
     }
 
     @Override
