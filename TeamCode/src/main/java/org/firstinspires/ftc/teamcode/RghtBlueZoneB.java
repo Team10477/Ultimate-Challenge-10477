@@ -20,12 +20,12 @@ public class RghtBlueZoneB extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        leftFront = hardwareMap.get(DcMotor.class,"left_front");
-        rightFront = hardwareMap.get(DcMotor.class,"right_front");
-        leftBack = hardwareMap.get(DcMotor.class,"left_rear");
-        rightBack = hardwareMap.get(DcMotor.class,"right_rear");
-        ColorSensor = hardwareMap.get(RevColorSensorV3.class,"color_sensor");
-        RightColorSensor = hardwareMap.get(RevColorSensorV3.class,"color_sensor_right");
+        leftFront = hardwareMap.get(DcMotor.class, "left_front");
+        rightFront = hardwareMap.get(DcMotor.class, "right_front");
+        leftBack = hardwareMap.get(DcMotor.class, "left_rear");
+        rightBack = hardwareMap.get(DcMotor.class, "right_rear");
+        ColorSensor = hardwareMap.get(RevColorSensorV3.class, "color_sensor");
+        RightColorSensor = hardwareMap.get(RevColorSensorV3.class, "color_sensor_right");
 
         leftFront.setDirection(DcMotor.Direction.FORWARD);
         leftBack.setDirection(DcMotor.Direction.FORWARD);
@@ -40,37 +40,40 @@ public class RghtBlueZoneB extends LinearOpMode {
         int counter = 0;
 
         waitForStart();
-        Color.RGBToHSV((int)(ColorSensor.red() * 8), (int)(ColorSensor.green() *8), (int)(ColorSensor.blue() * 8), hsvValues);
-        Color.RGBToHSV((int)(RightColorSensor.red() * 8), (int)(RightColorSensor.green() *8), (int)(RightColorSensor.blue() * 8), hsvValues);
-        float hue = hsvValues[0];
-        boolean redHue = hue < 60 || hue > 320;
-        boolean blueHue = hue > 120 && hue < 260;
 
-        leftFront.setPower(0.5);
-        rightFront.setPower(0.5);
-        leftBack.setPower(0.5);
-        rightBack.setPower(0.5);
+        while (opModeIsActive()) {
+            Color.RGBToHSV((int) (ColorSensor.red() * 8), (int) (ColorSensor.green() * 8), (int) (ColorSensor.blue() * 8), hsvValues);
+            Color.RGBToHSV((int) (RightColorSensor.red() * 8), (int) (RightColorSensor.green() * 8), (int) (RightColorSensor.blue() * 8), hsvValues);
+            float hue = hsvValues[0];
+            boolean redHue = hue < 60 || hue > 320;
+            boolean blueHue = hue > 120 && hue < 260;
 
-        if(blueHue = true) {
-            counter++;
-            if (counter == 2) {
-                leftFront.setPower(0.5);
-                rightFront.setPower(0.5);
-                leftBack.setPower(0.5);
-                rightBack.setPower(0.5);
+            leftFront.setPower(0.5);
+            rightFront.setPower(0.5);
+            leftBack.setPower(0.5);
+            rightBack.setPower(0.5);
 
-                sleep(500);
+            if (blueHue = true) {
+                counter++;
+                if (counter == 2) {
+                    leftFront.setPower(0.5);
+                    rightFront.setPower(0.5);
+                    leftBack.setPower(0.5);
+                    rightBack.setPower(0.5);
 
-                leftFront.setPower(-0.5);
-                rightFront.setPower(0.5);
-                leftBack.setPower(0.5);
-                rightBack.setPower(-0.5);
+                    sleep(500);
 
-                if (blueHue == true) {
-                    leftFront.setPower(0);
-                    rightFront.setPower(0);
-                    leftBack.setPower(0);
-                    rightBack.setPower(0);
+                    leftFront.setPower(-0.5);
+                    rightFront.setPower(0.5);
+                    leftBack.setPower(0.5);
+                    rightBack.setPower(-0.5);
+
+                    if (blueHue == true) {
+                        leftFront.setPower(0);
+                        rightFront.setPower(0);
+                        leftBack.setPower(0);
+                        rightBack.setPower(0);
+                    }
                 }
             }
         }
