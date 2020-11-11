@@ -74,7 +74,6 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  */
 
 @Autonomous(name="Moochi_lah", group="Wobble Goal")
-//@Disabled
 public class WobbleGoal_RedRight_VG extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -84,14 +83,7 @@ public class WobbleGoal_RedRight_VG extends LinearOpMode {
     private DcMotor rightFrontDrive = null;
     private DcMotor leftRearDrive = null;
     private DcMotor rightRearDrive = null;
-    private DcMotor linearSlide = null;
-    private Servo leftHand = null;
-    private Servo rightHand = null;
-    private Servo capstoneLeft = null;
-    private Servo capstoneRight = null;
-    private Servo frontArm = null;
-    private ColorSensor sensorColor = null;
-    private DistanceSensor sensorDistance = null;
+
     private RevColorSensorV3 leftColorSensor=null;
     private RevColorSensorV3 rightColorSensor=null;
 
@@ -102,7 +94,6 @@ public class WobbleGoal_RedRight_VG extends LinearOpMode {
     double leftRearPower =0;
     double rightRearPower = 0;
     double error =0;
-    Orientation lastAngles = new Orientation();
     double globalAngle;
 
     BNO055IMU imu;
@@ -112,8 +103,8 @@ public class WobbleGoal_RedRight_VG extends LinearOpMode {
     double DER_GAIN = 0.015;
     double delta_turn;
 
-    double RIGHT_SLOW = 0.2;
-    double TIMEOUT_WG_WALL = 0.5;
+    double RIGHT_SLOW = -0.4;
+    double TIMEOUT_WG_WALL = 1;
     double TIMEOUT_WG_TGC = 6.0;
     private ElapsedTime elapsedTime = new ElapsedTime();
     private ElapsedTime loopTime = new ElapsedTime();
@@ -132,21 +123,10 @@ public class WobbleGoal_RedRight_VG extends LinearOpMode {
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
          */
-
-// Here we establish connection between our Java Classes defined above and the Robot Configuration defined in the Robot Controller.
-// If the Robot Controller name does not match the name given below in the green text, there will be a run time error when you hit init in the RC phone
         leftFrontDrive  = hardwareMap.get(DcMotor.class, "left_front");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front");
         leftRearDrive  = hardwareMap.get(DcMotor.class, "left_rear");
         rightRearDrive = hardwareMap.get(DcMotor.class, "right_rear");
-        linearSlide = hardwareMap.get(DcMotor.class,"linear_slide");
-        leftHand = hardwareMap.get(Servo.class,"left_hand");
-        rightHand = hardwareMap.get(Servo.class,"right_hand");
-        frontArm = hardwareMap.get(Servo.class,"front_arm");
-        capstoneLeft=hardwareMap.get(Servo.class,"capstone_left");
-        capstoneRight=hardwareMap.get(Servo.class,"capstone_right");
-        sensorColor = hardwareMap.get(ColorSensor.class, "color_sensor_front");
-        sensorDistance = hardwareMap.get(DistanceSensor.class, "color_sensor_front");
         leftColorSensor = hardwareMap.get(RevColorSensorV3.class, "color_sensor");
         rightColorSensor = hardwareMap.get(RevColorSensorV3.class,"color_sensor_front");
 
@@ -158,37 +138,8 @@ public class WobbleGoal_RedRight_VG extends LinearOpMode {
         rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         rightRearDrive.setDirection(DcMotor.Direction.REVERSE);
 
-        // Define IMU Variables
-
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
-        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
-        // and named "imu".
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
-        resetAngle(); // set heading to zero
-
-        // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Ready to run");    //
-        telemetry.update();
-
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        // Test 1: 2019 - code is running fine.
-/*        mecanumDrive(0,0.5,0);
-        elapsedTime.reset();
-        while(opModeIsActive() && (elapsedTime.seconds()<3.0)){
-            error = 0 - getAngle();
-            delta_turn = PROP_GAIN*error;
-            mecanumDrive(0,0.5,-    delta_turn);
-        }
-        mecanumDrive(0,0,0);*/
 
         // Step 1: strafe to the wall
         // add touch sensor later, to improve the performance.
@@ -201,7 +152,7 @@ public class WobbleGoal_RedRight_VG extends LinearOpMode {
 
         elapsedTime.reset();
         redColorFound = 0;
-        while (opModeIsActive() && (elapsedTime.seconds()<TIMEOUT_WG_TGC) && redColorFound == 3 ){
+        while (opModeIsActive() && (elapsedTime.seconds()<TIMEOUT_WG_TGC) && redColorFound < 3 ){
             mecanumDrive(0.4, 0 ,0);
             Color.RGBToHSV((int) (rightColorSensor.red() * SCALE_FACTOR),
                     (int) (rightColorSensor.green() * SCALE_FACTOR),
@@ -223,7 +174,6 @@ public class WobbleGoal_RedRight_VG extends LinearOpMode {
 
     }
 
-    // Methods~^^
     public void mecanumDrive(double drive, double strafe, double turn){
         leftFrontPower   = Range.clip(drive+turn-strafe , -1.0, 1.0);
         rightFrontPower  = Range.clip(drive-turn+strafe , -1.0, 1.0);
@@ -235,37 +185,5 @@ public class WobbleGoal_RedRight_VG extends LinearOpMode {
         leftRearDrive.setPower(leftRearPower);
         rightRearDrive.setPower(rightRearPower);
     }
-    private void resetAngle()
-    {
-        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
-        globalAngle = 0;
-    }
-
-    /**
-     * Get current cumulative angle rotation from last reset.
-     * @return Angle in degrees. + = left, - = right.
-     */
-    private double getAngle()
-    {
-        // We experimentally determined the Z axis is the axis we want to use for heading angle.
-        // We have to process the angle because the imu works in euler angles so the Z axis is
-        // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes
-        // 180 degrees. We detect this transition and track the total cumulative angle of rotation.
-
-        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
-        double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
-
-        if (deltaAngle < -180)
-            deltaAngle += 360;
-        else if (deltaAngle > 180)
-            deltaAngle -= 360;
-
-        globalAngle += deltaAngle;
-
-        lastAngles = angles;
-
-        return globalAngle;
-    }
 }
