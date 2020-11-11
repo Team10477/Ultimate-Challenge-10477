@@ -7,16 +7,25 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
+import com.qualcomm.robotcore.util.Range;
 
 import static android.os.SystemClock.sleep;
 
-@Autonomous
+@Autonomous(name="Red_Right_Target_Zone")
 public class Move_to_TargetZoneA_RR extends OpMode {
 
     DcMotor leftFront;
     DcMotor rightFront;
     DcMotor leftBack;
     DcMotor rightBack;
+
+    double  leftFrontPower = 0;
+    double rightFrontPower = 0;
+    double leftRearPower =0;
+    double rightRearPower = 0;
+
+    float hsvValues[] = {0F, 0F, 0F};
+    final float values[] = hsvValues;
 
     RevColorSensorV3 leftColorSensor;
     RevColorSensorV3 rightColorSensor;
@@ -30,7 +39,7 @@ public class Move_to_TargetZoneA_RR extends OpMode {
         rightFront = hardwareMap.get(DcMotor.class, "right_front");
 
         leftColorSensor = hardwareMap.get(RevColorSensorV3.class, "color_sensor");
-        rightColorSensor = hardwareMap.get(RevColorSensorV3.class, "color_sensor_front");
+        rightColorSensor = hardwareMap.get(RevColorSensorV3.class, "color_sensor_right");
 
         leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -52,18 +61,11 @@ public class Move_to_TargetZoneA_RR extends OpMode {
     @Override
     public void loop() {
 
-        sleep(1000);
-        leftFront.setPower(0.25);
-        rightFront.setPower(-0.25);
-        rightBack.setPower(-0.25);
-        leftBack.setPower(0.25);
-
-        float hsvValues[] = {0F, 0F, 0F};
-        final float values[] = hsvValues;
-        float hue = hsvValues[0];
+        mecanumDrive(0, -0.4, 0);
 
         Color.RGBToHSV((int) (leftColorSensor.red() * 8), (int) (leftColorSensor.green() * 8), (int) (leftColorSensor.blue() * 8), hsvValues);
 
+        float hue = hsvValues[0];
 
         telemetry.addData("Color Red", hue);
         telemetry.update();
@@ -85,5 +87,16 @@ public class Move_to_TargetZoneA_RR extends OpMode {
         }
     }
 
+    public void mecanumDrive(double drive, double strafe, double turn){
+        leftFrontPower   = Range.clip(drive+turn-strafe , -1.0, 1.0);
+        rightFrontPower  = Range.clip(drive-turn+strafe , -1.0, 1.0);
+        leftRearPower    = Range.clip(drive+turn+strafe , -1.0, 1.0);
+        rightRearPower   = Range.clip(drive-turn-strafe , -1.0, 1.0);
+
+        leftFront.setPower(leftFrontPower);
+        rightFront.setPower(rightFrontPower);
+        leftBack.setPower(leftRearPower);
+        rightBack.setPower(rightRearPower);
+    }
 }
 
