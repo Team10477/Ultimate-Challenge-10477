@@ -27,30 +27,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.noveleven;
 
 import android.graphics.Color;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
-import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 
 @Autonomous(name="Moochi_lah", group="Wobble Goal")
@@ -105,7 +92,7 @@ public class WobbleGoal_RedRight_VG extends LinearOpMode {
         leftRearDrive  = hardwareMap.get(DcMotor.class, "left_rear");
         rightRearDrive = hardwareMap.get(DcMotor.class, "right_rear");
         leftColorSensor = hardwareMap.get(RevColorSensorV3.class, "color_sensor");
-        rightColorSensor = hardwareMap.get(RevColorSensorV3.class,"color_sensor_front");
+        rightColorSensor = hardwareMap.get(RevColorSensorV3.class,"color_sensor_right");
 
         leftColorSensor.enableLed(true);
         rightColorSensor.enableLed(true);

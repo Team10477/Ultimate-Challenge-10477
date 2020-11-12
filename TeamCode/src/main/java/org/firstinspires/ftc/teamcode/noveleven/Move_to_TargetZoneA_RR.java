@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.noveleven;
 
 import android.graphics.Color;
 
@@ -6,10 +6,7 @@ import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.util.Range;
-
-import static android.os.SystemClock.sleep;
 
 @Autonomous(name="Red_Right_Target_Zone")
 public class Move_to_TargetZoneA_RR extends OpMode {

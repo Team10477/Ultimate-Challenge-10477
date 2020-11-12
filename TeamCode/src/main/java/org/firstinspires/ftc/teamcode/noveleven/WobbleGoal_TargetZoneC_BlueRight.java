@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.noveleven;
 
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -16,17 +16,18 @@ public class WobbleGoal_TargetZoneC_BlueRight extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        leftFront = hardwareMap.get(DcMotor.class, "left_Front");
-        rightFront = hardwareMap.get(DcMotor.class, "right_Front");
-        leftBack = hardwareMap.get(DcMotor.class, "left_Back");
-        rightBack = hardwareMap.get(DcMotor.class, "right_Back");
-        colorSensor = hardwareMap.get(RevColorSensorV3.class, "color_sensor1");
+        leftFront = hardwareMap.get(DcMotor.class, "left_front");
+        rightFront = hardwareMap.get(DcMotor.class, "right_front");
+        leftBack = hardwareMap.get(DcMotor.class, "left_rear");
+        rightBack = hardwareMap.get(DcMotor.class, "right_rear");
+        colorSensor = hardwareMap.get(RevColorSensorV3.class, "color_sensor");
 
         colorSensor.enableLed(true);
 
         float hsvValues[] = {0, 0, 0};
 
         waitForStart();
+
         while (opModeIsActive()) {
             leftFront.setPower(0.5);
             rightFront.setPower(-0.5);
