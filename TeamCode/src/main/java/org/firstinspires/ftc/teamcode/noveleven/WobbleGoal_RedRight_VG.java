@@ -40,7 +40,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 
-@Autonomous(name="Moochi_lah", group="Wobble Goal")
+@Autonomous(name="RightRed_Viri", group="Wobble Goal")
 public class WobbleGoal_RedRight_VG extends LinearOpMode {
 
     private DcMotor leftFrontDrive = null;
@@ -69,7 +69,7 @@ public class WobbleGoal_RedRight_VG extends LinearOpMode {
 
     double RIGHT_SLOW = -0.4;
     double TIMEOUT_WG_WALL = 1;
-    double TIMEOUT_WG_TGC = 6.0;
+    double TIMEOUT_WG_TGC = 26.0;
     private ElapsedTime elapsedTime = new ElapsedTime();
     private ElapsedTime loopTime = new ElapsedTime();
 
@@ -117,7 +117,7 @@ public class WobbleGoal_RedRight_VG extends LinearOpMode {
         elapsedTime.reset();
         redColorFound = 0;
         while (opModeIsActive() && (elapsedTime.seconds()<TIMEOUT_WG_TGC) && redColorFound < 3 ){
-            mecanumDrive(0.4, 0 ,0);
+            mecanumDrive(0.3, 0 ,0);
             Color.RGBToHSV((int) (rightColorSensor.red() * SCALE_FACTOR),
                     (int) (rightColorSensor.green() * SCALE_FACTOR),
                     (int) (rightColorSensor.blue() * SCALE_FACTOR),
@@ -128,14 +128,20 @@ public class WobbleGoal_RedRight_VG extends LinearOpMode {
             saturation = hsvValues[1];
             value = hsvValues[2];
 
-            telemetry.addData("Color Red", String.valueOf(hue), String.valueOf(saturation), String.valueOf(value));
+            telemetry.addData("Color Red", hue);
+            telemetry.addData("RedColorFound", redColorFound);
             telemetry.update();
-            if(hue < 60 && hue > 320 && saturation > 0.5 && value > 0.5){
+
+            if((hue < 60 || hue > 320) ){
                 redColorFound++;
+                sleep(50);
             }
         }
         mecanumDrive(0,0,0);
-
+        telemetry.addData("Color Red", hue);
+        telemetry.addData("RedColorFound", redColorFound);
+        telemetry.update();
+        sleep(10000);
     }
 
     public void mecanumDrive(double drive, double strafe, double turn){
