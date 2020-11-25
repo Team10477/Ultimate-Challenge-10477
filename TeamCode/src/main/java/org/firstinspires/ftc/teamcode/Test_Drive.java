@@ -29,7 +29,7 @@ public class Test_Drive extends OpMode {
         rightFront = hardwareMap.get(DcMotor.class, "right_front");
 
         leftColorSensor = hardwareMap.get(RevColorSensorV3.class, "color_sensor");
-        rightColorSensor = hardwareMap.get(RevColorSensorV3.class,"color_sensor_front");
+        rightColorSensor = hardwareMap.get(RevColorSensorV3.class, "color_sensor_front");
 
         leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -44,6 +44,7 @@ public class Test_Drive extends OpMode {
 
         leftColorSensor.enableLed(true);
         rightColorSensor.enableLed(true);
+
     }
 
     @Override
