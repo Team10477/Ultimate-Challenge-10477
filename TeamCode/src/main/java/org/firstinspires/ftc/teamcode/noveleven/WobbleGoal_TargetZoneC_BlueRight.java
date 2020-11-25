@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.noveleven;
 
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -27,6 +27,7 @@ public class WobbleGoal_TargetZoneC_BlueRight extends LinearOpMode {
         float hsvValues[] = {0, 0, 0};
 
         waitForStart();
+
         while (opModeIsActive()) {
             leftFront.setPower(0.5);
             rightFront.setPower(-0.5);
