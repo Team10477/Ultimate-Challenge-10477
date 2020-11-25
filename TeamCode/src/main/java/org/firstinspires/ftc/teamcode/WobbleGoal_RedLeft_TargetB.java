@@ -36,11 +36,15 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-@Autonomous(name="Red Right-Target C", group="Wobble Goal")
-public class WobbleGoal_RedRight_TargetC extends LinearOpMode {
+@Autonomous(name="Red Left-Target B", group="Wobble Goal")
+public class WobbleGoal_RedLeft_TargetB extends LinearOpMode {
     double RIGHT_SLOW = -0.4;
+    double LEFT_SLOW = 0.4;
     double TIMEOUT_WG_WALL = 1;
+    double STRAFE_TIME_RED_LEFT = 0.5;
+    double STRAFE_TIME_RED_RIGHT = 0.5;
     double TIMEOUT_WG_TGC = 6.0;
+    double LIGHT_INTENSITY_WHITE = 20;
 
     private ElapsedTime elapsedTime = new ElapsedTime();
     private ElapsedTime loopTime = new ElapsedTime();
@@ -49,7 +53,8 @@ public class WobbleGoal_RedRight_TargetC extends LinearOpMode {
     final float values[] = hsvValues;
     final double SCALE_FACTOR = 8;
     int redColorFound = 0;
-    float hue =0, saturation=0, value=0;
+    int whitecolorfound = 0;
+    float hue = 0, saturation = 0, value = 0;
 
     HardwarePushBot hardwarePushBot = new HardwarePushBot();
 
@@ -64,12 +69,19 @@ public class WobbleGoal_RedRight_TargetC extends LinearOpMode {
         elapsedTime.reset();
 
         while (opModeIsActive()) {
-            // Step 1: strafe to the wall
-            strafeRightToWall();
+            // Step 1: strafe to the left
+            strafeLeft();
 
-            //Step 2: move to Target Zone "C"
-            moveToTargetC();
+            //Step 2: move straight until white line
+            movetowhiteline();
+
+            // Step 3: strafe to the right
+            strafeRight();
+            //Step 4: move straight until red line
+            movetored(1);
+            // Step 5: deposit WB and return
         }
+
 
     }
 
@@ -87,23 +99,51 @@ public class WobbleGoal_RedRight_TargetC extends LinearOpMode {
     }
 
     /**
-     *  Strafe Right to the Wall.
+     * Strafe Right to the Wall.
      */
     // add touch sensor later, to improve the performance.
-   private void strafeRightToWall() {
-       while (elapsedTime.seconds()<TIMEOUT_WG_WALL) {
-           hardwarePushBot.mecanumDrive(0, RIGHT_SLOW, 0);
-       }
-       hardwarePushBot.mecanumDrive(0,0,0);
-   }
+    private void strafeLeft() {
+        while (elapsedTime.seconds() < STRAFE_TIME_RED_LEFT) {
+            hardwarePushBot.mecanumDrive(0, LEFT_SLOW, 0);
+        }
+        hardwarePushBot.mecanumDrive(0, 0, 0);
+    }
 
     /**
      * Robot landing in target C.
      */
-    private void moveToTargetC() {
+    // Detect white line
+
+    private void movetowhiteline() {
         elapsedTime.reset();
         redColorFound = 0;
-        while ((elapsedTime.seconds()<TIMEOUT_WG_TGC) && redColorFound < 3 ){
+        whitecolorfound = 0;
+        while ((elapsedTime.seconds() < TIMEOUT_WG_TGC) && whitecolorfound < 1) {
+            boolean iswhitefound = iswhitefound();
+
+            if (iswhitefound)
+                whitecolorfound++;
+        }
+        hardwarePushBot.mecanumDrive(0, 0, 0);
+        telemetry.addData("Color Red", hue);
+        telemetry.addData("RedColorFound", redColorFound);
+        telemetry.update();
+        sleep(10000); //10000 milliseconds is only for telemetry to continue for debugging
+    }
+
+    // strafe right
+    private void strafeRight() {
+        while (elapsedTime.seconds() < STRAFE_TIME_RED_RIGHT) {
+            hardwarePushBot.mecanumDrive(0, RIGHT_SLOW, 0);
+        }
+        hardwarePushBot.mecanumDrive(0, 0, 0);
+    }
+
+    // go until red line
+    private void movetored(int numberOfRed) {
+        elapsedTime.reset();
+        redColorFound = 0;
+        while ((elapsedTime.seconds()<TIMEOUT_WG_TGC) && redColorFound < numberOfRed ){
             boolean isRedFound = isRedColorFound();
 
             if(isRedFound)
@@ -118,10 +158,50 @@ public class WobbleGoal_RedRight_TargetC extends LinearOpMode {
         sleep(10000);
     }
 
+    // deposit WB and return
+
+
+
+
+
     /**
-     * If Color Sensor detects Red Color.
+     * If Color Sensor detects Red Color. or white color
+     *
      * @return
      */
+
+
+     // color detection
+    public boolean iswhitefound() {
+        boolean found = false;
+        double lightIntensity;
+        lightIntensity = hardwarePushBot.rightColorSensor.alpha(); // total light luminosity
+/*
+
+        Color.RGBToHSV((int) (hardwarePushBot.rightColorSensor.red() * SCALE_FACTOR),
+                (int) (hardwarePushBot.rightColorSensor.green() * SCALE_FACTOR),
+                (int) (hardwarePushBot.rightColorSensor.blue() * SCALE_FACTOR),
+                hsvValues);
+        // CheckForRed is a hsv value check
+
+        hue = hsvValues[0];
+        saturation = hsvValues[1];
+        value = hsvValues[2];
+*/
+
+        telemetry.addData("Color Red", String.valueOf(hue), String.valueOf(saturation), String.valueOf(value));
+        telemetry.update();
+
+        if (lightIntensity > LIGHT_INTENSITY_WHITE) {
+            found = true;
+            sleep(50);
+        }
+
+        return found;
+    }
+
+
+
    public boolean isRedColorFound() {
         boolean found = false;
 
