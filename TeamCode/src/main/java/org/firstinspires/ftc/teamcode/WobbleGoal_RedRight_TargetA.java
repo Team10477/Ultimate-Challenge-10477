@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class WobbleGoal_RedRight_TargetA extends LinearOpMode {
 
     double Right_Slow = -0.3;
-    double Wait_Wall = 0.2;
+    double Wait_Wall = 1;
     double Forward = 0.7;
     int ScaleFactor = 10;
     int Time = 4;
