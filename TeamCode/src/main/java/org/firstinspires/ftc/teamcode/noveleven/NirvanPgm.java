@@ -26,7 +26,7 @@ public class NirvanPgm extends LinearOpMode {
         rightFront = hardwareMap.get(DcMotor.class, "right_front");
 
         leftColorSensor = hardwareMap.get(RevColorSensorV3.class, "color_sensor");
-        rightColorSensor = hardwareMap.get(RevColorSensorV3.class,"color_sensor_front");
+        rightColorSensor = hardwareMap.get(RevColorSensorV3.class,"color_sensor_right");
 
         leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
