@@ -16,6 +16,7 @@ public class HardwarePushBot {
     public DcMotor rightBackWheel = null;
     public DcMotor leftFrontWheel = null;
     public DcMotor rightFrontWheel = null;
+    public DcMotor ringIntake = null;
 
     /**
      * Two color Sensors
@@ -45,6 +46,7 @@ public class HardwarePushBot {
         mapWobbleArmServo(hwMap);
         mapTouchSensor(hwMap);
         mapColorSensor(hwMap);
+        mapRingIntake(hwMap);
     }
 
     public void mapWheels(HardwareMap hwMap) {
@@ -54,6 +56,9 @@ public class HardwarePushBot {
         rightFrontWheel = hwMap.get(DcMotor.class, "right_front");
     }
 
+    public void mapRingIntake(HardwareMap hwMap) {
+        ringIntake = hwMap.get(DcMotor.class, "ring_intake");
+    }
     public void mapWobbleArmServo(HardwareMap hwMap) {
         wobbleGoalArm = hwMap.get(Servo.class, "servo"); // Check servo config. in RC
     }
