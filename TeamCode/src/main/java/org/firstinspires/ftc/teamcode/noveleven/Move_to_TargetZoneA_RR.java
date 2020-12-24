@@ -30,8 +30,8 @@ public class Move_to_TargetZoneA_RR extends OpMode {
 
     @Override
     public void init() {
-        leftBack = hardwareMap.get(DcMotor.class, "left rear");
-        rightBack = hardwareMap.get(DcMotor.class, "right rear");
+        leftBack = hardwareMap.get(DcMotor.class, "left_rear");
+        rightBack = hardwareMap.get(DcMotor.class, "right_rear");
         leftFront = hardwareMap.get(DcMotor.class, "left_front");
         rightFront = hardwareMap.get(DcMotor.class, "right_front");
 
@@ -59,6 +59,8 @@ public class Move_to_TargetZoneA_RR extends OpMode {
     public void loop() {
 
         mecanumDrive(0, -0.4, 0);
+        sleep(1000);
+
 
         Color.RGBToHSV((int) (leftColorSensor.red() * 8), (int) (leftColorSensor.green() * 8), (int) (leftColorSensor.blue() * 8), hsvValues);
 
@@ -70,15 +72,13 @@ public class Move_to_TargetZoneA_RR extends OpMode {
         boolean redHue = hue < 60 || hue > 320;
 
         if (redHue) {
-            leftFront.setPower(0);
-            rightFront.setPower(0);
-            leftBack.setPower(0);
-            rightBack.setPower(0);
+            mecanumDrive(0.0, 0.0, 0);
         } else {
-            leftFront.setPower(0.5);
-            rightFront.setPower(0.5);
-            leftBack.setPower(0.5);
-            rightBack.setPower(0.5);
+            mecanumDrive(0.3, 0.0, 0);
+//            leftFront.setPower(0.5);
+//            rightFront.setPower(0.5);
+//            leftBack.setPower(0.5);
+//            rightBack.setPower(0.5);
 
 
         }

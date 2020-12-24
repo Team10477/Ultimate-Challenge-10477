@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import static android.os.SystemClock.sleep;
 
-@Autonomous(name="TEST")
+@Autonomous(name="TEST1")
 public class Test_Drive extends OpMode {
 
     DcMotor leftFront;
