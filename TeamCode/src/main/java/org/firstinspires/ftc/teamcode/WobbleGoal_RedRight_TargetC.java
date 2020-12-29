@@ -38,7 +38,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="Red Right-Target C", group="Wobble Goal")
 public class WobbleGoal_RedRight_TargetC extends LinearOpMode {
-    double RIGHT_SLOW = -0.4;
+    double RIGHT_SLOW = -0.25;
     double TIMEOUT_WG_WALL = 1;
     double TIMEOUT_WG_TGC = 6.0;
 
@@ -92,7 +92,6 @@ public class WobbleGoal_RedRight_TargetC extends LinearOpMode {
     // add touch sensor later, to improve the performance.
    private void strafeRightToWall() {
        while (elapsedTime.seconds()<TIMEOUT_WG_WALL) {
-           hardwarePushBot.mecanumDrive(0, RIGHT_SLOW, 0);
        }
        hardwarePushBot.mecanumDrive(0,0,0);
    }

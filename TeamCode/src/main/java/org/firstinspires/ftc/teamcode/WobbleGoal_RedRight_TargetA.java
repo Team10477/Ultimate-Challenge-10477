@@ -11,8 +11,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class WobbleGoal_RedRight_TargetA extends LinearOpMode {
 
     double Right_Slow = -0.3;
-    double Wait_Wall = 1;
-    double Forward = 0.7;
+    double Wait_Wall = 0.8;
+    double Forward = 0.3;
     int ScaleFactor = 10;
     int Time = 4;
 
@@ -34,7 +34,7 @@ public class WobbleGoal_RedRight_TargetA extends LinearOpMode {
 
         elapsedTime.reset();
 
-        while (opModeIsActive());{
+        while (opModeIsActive()){
             //Robot strafes right to the wall
             strafeRightToWall();
 
@@ -56,12 +56,11 @@ public class WobbleGoal_RedRight_TargetA extends LinearOpMode {
     }
 
     private void strafeRightToWall() {
-        while(elapsedTime.seconds()<Wait_Wall );{
+        while(elapsedTime.seconds()<Wait_Wall ) {
+            hardwarePushBot.mecanumDrive(0, Right_Slow, 0);
         }
 
-        hardwarePushBot.mecanumDrive(0, Right_Slow, 0);
-
-        hardwarePushBot.mecanumDrive(0, 0, 0);
+       hardwarePushBot.mecanumDrive(0, 0, 0);
 
     }
 
@@ -71,7 +70,7 @@ public class WobbleGoal_RedRight_TargetA extends LinearOpMode {
 
         while ((elapsedTime.seconds()<Time) && redColorFound < 1 ){
             boolean isRedFound = isRedColorFound();
-
+            hardwarePushBot.mecanumDrive(Forward, 0, 0);
             if(isRedFound)
                 redColorFound++;
 
@@ -106,7 +105,6 @@ public class WobbleGoal_RedRight_TargetA extends LinearOpMode {
         }
 
         return found;
-
 
     }
 
