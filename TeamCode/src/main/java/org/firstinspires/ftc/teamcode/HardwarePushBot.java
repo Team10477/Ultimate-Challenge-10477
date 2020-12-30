@@ -130,20 +130,7 @@ public class HardwarePushBot {
         colSensor.enableLed(true);
     }
 
-    public void drivewWithFeedback_FBM(double drive_power, double strafe_power, double timeOut, LinearOpMode OpMode){
-        mecanumDrive(drive_power,strafe_power,0.0); // pass the parameters to a mecanumDrive method
 
-        elapsedTime.reset();
-        integralError=0;
-        while (OpMode.opModeIsActive() && elapsedTime.seconds()<timeOut){
-            heading = getAngle();
-            error = 0-heading; // desrired - current heading is the error
-            integralError = integralError + error*0.025;
-
-            mecanumDrive(drive_power,strafe_power,-(error*GAIN_PROP+integralError*GAIN_INT)); // the multiplication of 0.015 is a gain to make the turn power small (not close to 1, which is maximum)
-        }
-        mecanumDrive(0,0.0,0.0);
-    }
     public void initializeImu(HardwareMap hardwareMap) {
         // Set up the parameters with which we will use our IMU. Note that integration
         // algorithm here just reports accelerations to the logcat log; it doesn't actually
@@ -168,7 +155,7 @@ public class HardwarePushBot {
         lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         globalAngle = 0;
     }
-    private double getAngle()
+    public double getAngle()
     {
         // We experimentally determined the Z axis is the axis we want to use for heading angle.
         // We have to process the angle because the imu works in euler angles so the Z axis is
