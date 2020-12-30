@@ -46,7 +46,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 
-@Autonomous(name="Red Left Target A FBM", group="Wobble Goal")
+@Autonomous(name="Test Feedback", group="Wobble Goal")
 public class WobbleGoal_RedLeft_TargetA_FBM extends LinearOpMode {
     double RIGHT_SLOW = -0.4;
     double LEFT_SLOW = 0.4;
@@ -97,23 +97,43 @@ public class WobbleGoal_RedLeft_TargetA_FBM extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        elapsedTime.reset();
+
 
 
         while (opModeIsActive() && !isStop) {
 
-            // step 1: strafe left half a square
-            strafeLeft();
-            //Step 2: move straight until white line
-            sleep(500);
-            movetowhiteline();
+            // drive left with feedback
+  /*          elapsedTime.reset();
+            integralError = 0;
 
-            // Step 3: strafe to the right until red line
-            strafe_to_redRight(1);
-            // Step 4: strafe right to center in target zone.
+            hardwarePushBot.mecanumDrive(0, 0.3, 0);
+            while (opModeIsActive()&& elapsedTime.seconds()<2.0){
+                heading = getAngle();
+                error = 0-heading; // desrired - current heading is the error
+                integralError = integralError + error*0.025;
 
+                hardwarePushBot.mecanumDrive(0,0.3,-(error*.015+integralError*0.015)); // the multiplication of 0.05 is a gain to make the turn power small (not close to 1)
+            }
+            hardwarePushBot.mecanumDrive(0,0.0,0.0);
 
-            // Step 4: deposit WB and return
+            // drive forward with feedback
+
+            hardwarePushBot.mecanumDrive(0.3,0.0,0.0); // move forward slowly
+            elapsedTime.reset();
+            integralError=0;
+            while (opModeIsActive()&& elapsedTime.seconds()<2.0){
+                heading = getAngle();
+                error = 0-heading; // desrired - current heading is the error
+                integralError = integralError + error*0.025;
+
+                hardwarePushBot.mecanumDrive(0.3,0,-(error*.015+integralError*0.015)); // the multiplication of 0.05 is a gain to make the turn power small (not close to 1)
+            }
+            hardwarePushBot.mecanumDrive(0,0.0,0.0);*/
+//Strafe left for 2 seconds
+            drivewWithFeedback_FBM(0,0.3,2);
+
+            //drive forward for 2 seconds
+            drivewWithFeedback_FBM(0.3,0,2);
         }
 
 
@@ -131,7 +151,7 @@ public class WobbleGoal_RedLeft_TargetA_FBM extends LinearOpMode {
 
         hardwarePushBot.setWheelDirection();
 
-        initializeImu(hardwareMap);
+        hardwarePushBot.initializeImu(hardwareMap);
         //feedbackMovement.initIntegralError(0, hardwarePushBot);
     }
 
@@ -140,7 +160,7 @@ public class WobbleGoal_RedLeft_TargetA_FBM extends LinearOpMode {
      * Strafe Right to the Wall.
      */
     // add touch sensor later, to improve the performance.
-    private void strafeLeft() {
+  /*  private void strafeLeft() {
         initIntegralError(LEFT_SLOW, hardwarePushBot);
      // while (elapsedTime.time() < 4000) {
            // hardwarePushBot.mecanumDrive(0, LEFT_SLOW, 0);
@@ -151,9 +171,9 @@ public class WobbleGoal_RedLeft_TargetA_FBM extends LinearOpMode {
        //hardwarePushBot.mecanumDrive(0, 0, 0);
         driveWithFeedback(hardwarePushBot,0,0);
     }
-
+*/
     // Strafe right to red line
-    private void strafe_to_redRight(int numberofred){
+  /*  private void strafe_to_redRight(int numberofred){
         elapsedTime.reset();
         redColorFound = 0;
         initIntegralError(RIGHT_SLOW, hardwarePushBot);
@@ -179,13 +199,13 @@ public class WobbleGoal_RedLeft_TargetA_FBM extends LinearOpMode {
 
     }
 
-
+*/
     /**
      * Robot landing in target C.
      */
     // Detect white line
 
-    private void movetowhiteline() {
+/*    private void movetowhiteline() {
       //  elapsedTime.reset();
         redColorFound = 0;
         whitecolorfound = 0;
@@ -202,7 +222,7 @@ public class WobbleGoal_RedLeft_TargetA_FBM extends LinearOpMode {
         telemetry.addData("WhiteColorFound", redColorFound);
         telemetry.update();
     }
-
+*/
     // strafe right
     private void strafeRight() {
         elapsedTime.reset();
@@ -300,6 +320,7 @@ public class WobbleGoal_RedLeft_TargetA_FBM extends LinearOpMode {
 
         return found;
     }
+    /*
     public void initializeImu(HardwareMap hardwareMap) {
         // Set up the parameters with which we will use our IMU. Note that integration
         // algorithm here just reports accelerations to the logcat log; it doesn't actually
@@ -379,7 +400,19 @@ public class WobbleGoal_RedLeft_TargetA_FBM extends LinearOpMode {
         error = 0;
         driveWithAngle(0, power,0, robot);
         //  resetAngle();
+    }*/
+    public void drivewWithFeedback_FBM(double drive_power, double strafe_power, double timeOut){
+        hardwarePushBot.mecanumDrive(drive_power,strafe_power,0.0); // pass the parameters to a mecanumDrive method
+
+        elapsedTime.reset();
+        integralError=0;
+        while (opModeIsActive()&& elapsedTime.seconds()<timeOut){
+            heading = hardwarePushBot.getAngle();
+            error = 0-heading; // desrired - current heading is the error
+            integralError = integralError + error*0.025;
+
+            hardwarePushBot.mecanumDrive(drive_power,strafe_power,-(error*GAIN_PROP+integralError*GAIN_INT)); // the multiplication of 0.015 is a gain to make the turn power small (not close to 1, which is maximum)
+        }
+        hardwarePushBot.mecanumDrive(0,0.0,0.0);
     }
 }
-//Literally my life is beaches every single night, messy buns and christmas lights, literally my life is, literally my life is
-// does anyone read these?
