@@ -103,16 +103,19 @@ public class WobbleGoal_RedLeft_TargetA_FBM extends LinearOpMode {
         while (opModeIsActive() && !isStop) {
             //Strafe left for 0.5 seconds
             drivewWithFeedback_FBM(0,0.3,0.5);
-            // Move forward to white line
-            drivewWithFeedback_FBM_Colors(0.3,0,5,"WHITE");
+            // Move forward blindly
+            drivewWithFeedback_FBM(0.35,0,1);
+            //Detect
+            drivewWithFeedback_FBM_Colors(0.25,0,2,"WHITE");
+           // drivewWithFeedback_FBM_Colors(0.3,0,5,"WHITE")
+
             //Strafe right until red
-            drivewWithFeedback_FBM_Colors(0,-0.35,8,"RED");
+            drivewWithFeedback_FBM_Colors(0,-0.3,8,"RED");
 
             //Adjustments
-            drivewWithFeedback_FBM(0,-0.35,0.7);
-
-            drivewWithFeedback_FBM(-.35,0,0.7);
-
+            drivewWithFeedback_FBM(0,-0.35,0.9);
+            //drivewWithFeedback_FBM_Colors(-0.25,0,5,"RED");
+            drivewWithFeedback_FBM(-.35,0,0.5);
             isStop = true;
         }
 
