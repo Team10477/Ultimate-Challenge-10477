@@ -39,6 +39,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Autonomous(name="Red Right-Target C", group="Wobble Goal")
 public class WobbleGoal_RedRight_TargetC extends LinearOpMode {
     double RIGHT_SLOW = -0.4;
+    double FORWARD_SLOW = 0.3;
     double TIMEOUT_WG_WALL = 1;
     double TIMEOUT_WG_TGC = 6.0;
 
@@ -105,7 +106,7 @@ public class WobbleGoal_RedRight_TargetC extends LinearOpMode {
         redColorFound = 0;
         while ((elapsedTime.seconds()<TIMEOUT_WG_TGC) && redColorFound < 3 ){
             boolean isRedFound = isRedColorFound();
-
+            hardwarePushBot.mecanumDrive(FORWARD_SLOW,0,0);
             if(isRedFound)
                 redColorFound++;
 
@@ -115,7 +116,7 @@ public class WobbleGoal_RedRight_TargetC extends LinearOpMode {
         telemetry.addData("Color Red", hue);
         telemetry.addData("RedColorFound", redColorFound);
         telemetry.update();
-        sleep(10000);
+        //sleep(10000);
     }
 
     /**
