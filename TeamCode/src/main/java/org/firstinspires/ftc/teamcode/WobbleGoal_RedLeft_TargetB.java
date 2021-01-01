@@ -44,7 +44,8 @@ public class WobbleGoal_RedLeft_TargetB extends LinearOpMode {
     double STRAFE_TIME_RED_LEFT = 0.5;
     double STRAFE_TIME_RED_RIGHT = 0.5;
     double TIMEOUT_WG_TGC = 6.0;
-    double LIGHT_INTENSITY_WHITE = 20;
+    double LIGHT_INTENSITY_WHITE = 40;
+    double FORWARD_SLOW = 0.25;
 
     private ElapsedTime elapsedTime = new ElapsedTime();
     private ElapsedTime loopTime = new ElapsedTime();
@@ -57,6 +58,8 @@ public class WobbleGoal_RedLeft_TargetB extends LinearOpMode {
     float hue = 0, saturation = 0, value = 0;
 
     HardwarePushBot hardwarePushBot = new HardwarePushBot();
+
+    FeedbackMovement feedbackMovement = new FeedbackMovement();
 
     @Override
     public void runOpMode() {
@@ -104,7 +107,8 @@ public class WobbleGoal_RedLeft_TargetB extends LinearOpMode {
     // add touch sensor later, to improve the performance.
     private void strafeLeft() {
         while (elapsedTime.seconds() < STRAFE_TIME_RED_LEFT) {
-            hardwarePushBot.mecanumDrive(0, LEFT_SLOW, 0);
+            //hardwarePushBot.mecanumDrive(0, LEFT_SLOW, 0);
+            feedbackMovement.driveWithFeedback(hardwarePushBot,0,LEFT_SLOW);
         }
         hardwarePushBot.mecanumDrive(0, 0, 0);
     }
@@ -120,7 +124,8 @@ public class WobbleGoal_RedLeft_TargetB extends LinearOpMode {
         whitecolorfound = 0;
         while ((elapsedTime.seconds() < TIMEOUT_WG_TGC) && whitecolorfound < 1) {
             boolean iswhitefound = iswhitefound();
-
+            //hardwarePushBot.mecanumDrive(FORWARD_SLOW, 0, 0);
+            feedbackMovement.driveWithFeedback(hardwarePushBot,FORWARD_SLOW,0);
             if (iswhitefound)
                 whitecolorfound++;
         }
@@ -128,13 +133,14 @@ public class WobbleGoal_RedLeft_TargetB extends LinearOpMode {
         telemetry.addData("Color Red", hue);
         telemetry.addData("RedColorFound", redColorFound);
         telemetry.update();
-        sleep(10000); //10000 milliseconds is only for telemetry to continue for debugging
     }
 
     // strafe right
     private void strafeRight() {
+        elapsedTime.reset();
         while (elapsedTime.seconds() < STRAFE_TIME_RED_RIGHT) {
-            hardwarePushBot.mecanumDrive(0, RIGHT_SLOW, 0);
+            //hardwarePushBot.mecanumDrive(0, RIGHT_SLOW, 0);
+            feedbackMovement.driveWithFeedback(hardwarePushBot,0,RIGHT_SLOW);
         }
         hardwarePushBot.mecanumDrive(0, 0, 0);
     }
@@ -145,7 +151,8 @@ public class WobbleGoal_RedLeft_TargetB extends LinearOpMode {
         redColorFound = 0;
         while ((elapsedTime.seconds()<TIMEOUT_WG_TGC) && redColorFound < numberOfRed ){
             boolean isRedFound = isRedColorFound();
-
+            //hardwarePushBot.mecanumDrive(0, FORWARD_SLOW, 0);
+            feedbackMovement.driveWithFeedback(hardwarePushBot,FORWARD_SLOW,0);
             if(isRedFound)
                 redColorFound++;
 
@@ -155,7 +162,6 @@ public class WobbleGoal_RedLeft_TargetB extends LinearOpMode {
         telemetry.addData("Color Red", hue);
         telemetry.addData("RedColorFound", redColorFound);
         telemetry.update();
-        sleep(10000);
     }
 
     // deposit WB and return
@@ -175,8 +181,8 @@ public class WobbleGoal_RedLeft_TargetB extends LinearOpMode {
     public boolean iswhitefound() {
         boolean found = false;
         double lightIntensity;
-        lightIntensity = hardwarePushBot.rightColorSensor.alpha(); // total light luminosity
-/*
+   //     lightIntensity = hardwarePushBot.rightColorSensor.alpha(); // total light luminosity
+
 
         Color.RGBToHSV((int) (hardwarePushBot.rightColorSensor.red() * SCALE_FACTOR),
                 (int) (hardwarePushBot.rightColorSensor.green() * SCALE_FACTOR),
@@ -187,12 +193,11 @@ public class WobbleGoal_RedLeft_TargetB extends LinearOpMode {
         hue = hsvValues[0];
         saturation = hsvValues[1];
         value = hsvValues[2];
-*/
 
         telemetry.addData("Color Red", String.valueOf(hue), String.valueOf(saturation), String.valueOf(value));
         telemetry.update();
 
-        if (lightIntensity > LIGHT_INTENSITY_WHITE) {
+        if (value > LIGHT_INTENSITY_WHITE) {
             found = true;
             sleep(50);
         }
