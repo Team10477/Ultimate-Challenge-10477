@@ -23,7 +23,7 @@ public class TensorFlowIdentifyTargetZone extends LinearOpMode {
     private TFObjectDetector tfod;
 
     //Target zone variables to keep hold of the number of rings - 1 (Target A),2 (Target B), 3 (Target C.
-    private int targetZone = 0;
+    public int targetZone = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -41,7 +41,7 @@ public class TensorFlowIdentifyTargetZone extends LinearOpMode {
     /**
      * Initialize the Vuforia localization engine.
      */
-    private void initVuforia() {
+    public void initVuforia() {
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
          */
@@ -59,7 +59,7 @@ public class TensorFlowIdentifyTargetZone extends LinearOpMode {
     /**
      * Initialize the TensorFlow Object Detection engine.
      */
-    private void initTfod() {
+    public void initTfod() {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
