@@ -46,7 +46,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 
-@Autonomous(name="Test Feedback", group="Wobble Goal")
+@Autonomous(name="Red Left Target A with Feedback", group="Wobble Goal")
 public class WobbleGoal_RedLeft_TargetA_FBM extends LinearOpMode {
     double RIGHT_SLOW = -0.4;
     double LEFT_SLOW = 0.4;
@@ -54,7 +54,7 @@ public class WobbleGoal_RedLeft_TargetA_FBM extends LinearOpMode {
     double STRAFE_TIME_RED_LEFT = 0.5;
     double STRAFE_TIME_RED_RIGHT = 0.5;
     double TIMEOUT_WG_TGC = 6.0;
-    double LIGHT_INTENSITY_WHITE = 40;
+    double LIGHT_INTENSITY_WHITE = 30;
     double FORWARD_SLOW = 0.25;
 
     private ElapsedTime elapsedTime = new ElapsedTime();
@@ -97,43 +97,23 @@ public class WobbleGoal_RedLeft_TargetA_FBM extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-
+        isStop = false;
 
 
         while (opModeIsActive() && !isStop) {
+            //Strafe left for 0.5 seconds
+            drivewWithFeedback_FBM(0,0.3,0.5);
+            // Move forward to white line
+            drivewWithFeedback_FBM_Colors(0.3,0,5,"WHITE");
+            //Strafe right until red
+            drivewWithFeedback_FBM_Colors(0,-0.35,8,"RED");
 
-            // drive left with feedback
-  /*          elapsedTime.reset();
-            integralError = 0;
+            //Adjustments
+            drivewWithFeedback_FBM(0,-0.35,0.7);
 
-            hardwarePushBot.mecanumDrive(0, 0.3, 0);
-            while (opModeIsActive()&& elapsedTime.seconds()<2.0){
-                heading = getAngle();
-                error = 0-heading; // desrired - current heading is the error
-                integralError = integralError + error*0.025;
+            drivewWithFeedback_FBM(-.35,0,0.7);
 
-                hardwarePushBot.mecanumDrive(0,0.3,-(error*.015+integralError*0.015)); // the multiplication of 0.05 is a gain to make the turn power small (not close to 1)
-            }
-            hardwarePushBot.mecanumDrive(0,0.0,0.0);
-
-            // drive forward with feedback
-
-            hardwarePushBot.mecanumDrive(0.3,0.0,0.0); // move forward slowly
-            elapsedTime.reset();
-            integralError=0;
-            while (opModeIsActive()&& elapsedTime.seconds()<2.0){
-                heading = getAngle();
-                error = 0-heading; // desrired - current heading is the error
-                integralError = integralError + error*0.025;
-
-                hardwarePushBot.mecanumDrive(0.3,0,-(error*.015+integralError*0.015)); // the multiplication of 0.05 is a gain to make the turn power small (not close to 1)
-            }
-            hardwarePushBot.mecanumDrive(0,0.0,0.0);*/
-//Strafe left for 2 seconds
-            drivewWithFeedback_FBM(0,0.3,2);
-
-            //drive forward for 2 seconds
-            drivewWithFeedback_FBM(0.3,0,2);
+            isStop = true;
         }
 
 
@@ -153,146 +133,6 @@ public class WobbleGoal_RedLeft_TargetA_FBM extends LinearOpMode {
 
         hardwarePushBot.initializeImu(hardwareMap);
         //feedbackMovement.initIntegralError(0, hardwarePushBot);
-    }
-
-
-    /**
-     * Strafe Right to the Wall.
-     */
-    // add touch sensor later, to improve the performance.
-  /*  private void strafeLeft() {
-        initIntegralError(LEFT_SLOW, hardwarePushBot);
-     // while (elapsedTime.time() < 4000) {
-           // hardwarePushBot.mecanumDrive(0, LEFT_SLOW, 0);
-           driveWithFeedback(hardwarePushBot,0,LEFT_SLOW, telemetry);
-
-           sleep((long) (STRAFE_TIME_RED_LEFT*1000));
-     //   }
-       //hardwarePushBot.mecanumDrive(0, 0, 0);
-        driveWithFeedback(hardwarePushBot,0,0);
-    }
-*/
-    // Strafe right to red line
-  /*  private void strafe_to_redRight(int numberofred){
-        elapsedTime.reset();
-        redColorFound = 0;
-        initIntegralError(RIGHT_SLOW, hardwarePushBot);
-        while ((elapsedTime.seconds()<TIMEOUT_WG_TGC) && redColorFound < numberofred ){
-            boolean isRedFound = isRedColorFound();
-            driveWithFeedback(hardwarePushBot,0,RIGHT_SLOW);
-           // hardwarePushBot.mecanumDrive(0, RIGHT_SLOW, 0);
-
-
-           // feedbackMovement.initIntegralError(RIGHT_SLOW, hardwarePushBot);
-           // feedbackMovement.driveWithFeedback(hardwarePushBot,0,RIGHT_SLOW);
-            if(isRedFound)
-                redColorFound++;
-
-        }
-
-    //    feedbackMovement.initIntegralError(RIGHT_SLOW, hardwarePushBot);
-        driveWithFeedback(hardwarePushBot,0,0);
-       // hardwarePushBot.mecanumDrive(0,0,0);
-        telemetry.addData("Color Red", hue);
-        telemetry.addData("RedColorFound", redColorFound);
-        telemetry.update();
-
-    }
-
-*/
-    /**
-     * Robot landing in target C.
-     */
-    // Detect white line
-
-/*    private void movetowhiteline() {
-      //  elapsedTime.reset();
-        redColorFound = 0;
-        whitecolorfound = 0;
-        boolean iswhitefound = false;
-       // initIntegralError(RIGHT_SLOW, hardwarePushBot);
-        while ( !iswhitefound) {
-            driveWithFeedback(hardwarePushBot,FORWARD_SLOW,0, telemetry);
-            iswhitefound = iswhitefound();
-         }
-        driveWithFeedback(hardwarePushBot,0,0);
-     //  hardwarePushBot.mecanumDrive(0, 0, 0);
-        isStop = true;
-        telemetry.addData("Color white", hue);
-        telemetry.addData("WhiteColorFound", redColorFound);
-        telemetry.update();
-    }
-*/
-    // strafe right
-    private void strafeRight() {
-        elapsedTime.reset();
-
-            hardwarePushBot.mecanumDrive(0, RIGHT_SLOW, 0);
-            //feedbackMovement.driveWithFeedback(hardwarePushBot,0,RIGHT_SLOW);
-        sleep((long) (STRAFE_TIME_RED_RIGHT*1000));
-        hardwarePushBot.mecanumDrive(0, 0, 0);
-    }
-
-    // go until red line
-    private void movetored(int numberOfRed) {
-        elapsedTime.reset();
-        redColorFound = 0;
-        while (redColorFound < numberOfRed ){
-            boolean isRedFound = isRedColorFound();
-            hardwarePushBot.mecanumDrive(0, FORWARD_SLOW, 0);
-            //feedbackMovement.driveWithFeedback(hardwarePushBot,FORWARD_SLOW,0);
-            if(isRedFound)
-                redColorFound++;
-
-        }
-
-        hardwarePushBot.mecanumDrive(0,0,0);
-        telemetry.addData("Color Red", hue);
-        telemetry.addData("RedColorFound", redColorFound);
-        telemetry.update();
-    }
-
-    // deposit WB and return
-
-
-
-
-
-    /**
-     * If Color Sensor detects Red Color. or white color
-     *
-     * @return
-     */
-
-
-    // color detection
-    public boolean iswhitefound() {
-        boolean found = false;
-        double lightIntensity;
-        //     lightIntensity = hardwarePushBot.rightColorSensor.alpha(); // total light luminosity
-
-
-        Color.RGBToHSV((int) (hardwarePushBot.rightColorSensor.red() * SCALE_FACTOR),
-                (int) (hardwarePushBot.rightColorSensor.green() * SCALE_FACTOR),
-                (int) (hardwarePushBot.rightColorSensor.blue() * SCALE_FACTOR),
-                hsvValues);
-        // CheckForRed is a hsv value check
-
-        hue = hsvValues[0];
-        saturation = hsvValues[1];
-        value = hsvValues[2];
-
-        telemetry.addData("Color White", String.valueOf(hue), String.valueOf(saturation), String.valueOf(value));
-        telemetry.addData("Color White value", value);
-        telemetry.addData("Color White saturation", saturation);
-        telemetry.update();
-
-        if (value >= LIGHT_INTENSITY_WHITE) {
-            found = true;
-           sleep(20);
-        }
-
-        return found;
     }
 
 
@@ -320,87 +160,54 @@ public class WobbleGoal_RedLeft_TargetA_FBM extends LinearOpMode {
 
         return found;
     }
-    /*
-    public void initializeImu(HardwareMap hardwareMap) {
-        // Set up the parameters with which we will use our IMU. Note that integration
-        // algorithm here just reports accelerations to the logcat log; it doesn't actually
-        // provide positional information.
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
-        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
-        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
-        // and named "imu".
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
-        resetAngle();
-    }
-    public void resetAngle()
-    {
-        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        globalAngle = 0;
-    }
-    private double getAngle()
-    {
-        // We experimentally determined the Z axis is the axis we want to use for heading angle.
-        // We have to process the angle because the imu works in euler angles so the Z axis is
-        // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes
-        // 180 degrees. We detect this transition and track the total cumulative angle of rotation.
 
-        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
-        double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
 
-        if (deltaAngle < -180)
-            deltaAngle += 360;
-        else if (deltaAngle > 180)
-            deltaAngle -= 360;
+    public boolean iswhitefound() {
+        boolean found = false;
+        double lightIntensity;
+        //     lightIntensity = hardwarePushBot.rightColorSensor.alpha(); // total light luminosity
 
-        globalAngle += deltaAngle;
 
-        lastAngles = angles;
+        Color.RGBToHSV((int) (hardwarePushBot.rightColorSensor.red() * SCALE_FACTOR),
+                (int) (hardwarePushBot.rightColorSensor.green() * SCALE_FACTOR),
+                (int) (hardwarePushBot.rightColorSensor.blue() * SCALE_FACTOR),
+                hsvValues);
+        // CheckForRed is a hsv value check
 
-        return globalAngle;
-    }
-    public void driveWithAngle(double drive, double strafe, double turn, HardwarePushBot robot){
+        hue = hsvValues[0];
+        saturation = hsvValues[1];
+        value = hsvValues[2];
 
-        leftFrontPower   = Range.clip(drive+turn-strafe , -1.0, 1.0);
-        rightFrontPower  = Range.clip(drive-turn+strafe , -1.0, 1.0);
-        leftRearPower    = Range.clip(drive+turn+strafe , -1.0, 1.0);
-        rightRearPower   = Range.clip(drive-turn-strafe , -1.0, 1.0);
-
-        robot.setWheelPower(leftFrontPower, rightFrontPower, leftRearPower, rightRearPower );
-    }
-
-    public void driveWithFeedback(HardwarePushBot robot, double drivePower, double strafePower, Telemetry telemetry) {
-        heading = getAngle();
-        telemetry.addData("IMU Angle: ", heading);
+        telemetry.addData("Color White", String.valueOf(hue), String.valueOf(saturation), String.valueOf(value));
+        telemetry.addData("Color White value", value);
+        telemetry.addData("Color White saturation", saturation);
         telemetry.update();
-        error = (0-heading);
-        integralError = integralError + (0-heading)*0.05;
-        deltaTurn = error*GAIN_PROP + integralError*GAIN_INT;
 
-        driveWithAngle(drivePower,strafePower, deltaTurn, robot);
-    }
-    public void driveWithFeedback(HardwarePushBot robot, double drivePower, double strafePower) {
-        heading = getAngle();
-        error = (0-heading);
-        integralError = integralError + (0-heading)*0.05;
-        deltaTurn = error*GAIN_PROP + integralError*GAIN_INT;
+        if (value >= LIGHT_INTENSITY_WHITE) {
+            found = true;
+            sleep(20);
+        }
 
-        driveWithAngle(drivePower,strafePower, deltaTurn, robot);
+        return found;
     }
-    public void initIntegralError(double power, HardwarePushBot robot) {
-        integralError=0;
-        error = 0;
-        driveWithAngle(0, power,0, robot);
-        //  resetAngle();
-    }*/
+
+ public boolean isColorFound(String colorString){
+        switch(colorString) {
+            case "RED":{
+                return isRedColorFound();
+            }
+            case "WHITE":{
+                return iswhitefound();
+            }
+            default:
+                return false;
+            //Add a case for blue
+        }
+
+ }
+
     public void drivewWithFeedback_FBM(double drive_power, double strafe_power, double timeOut){
         hardwarePushBot.mecanumDrive(drive_power,strafe_power,0.0); // pass the parameters to a mecanumDrive method
 
@@ -415,4 +222,21 @@ public class WobbleGoal_RedLeft_TargetA_FBM extends LinearOpMode {
         }
         hardwarePushBot.mecanumDrive(0,0.0,0.0);
     }
+
+    public void drivewWithFeedback_FBM_Colors(double drive_power, double strafe_power, double timeOut, String colorString){
+        hardwarePushBot.mecanumDrive(drive_power,strafe_power,0.0); // pass the parameters to a mecanumDrive method
+        elapsedTime.reset();
+        integralError=0;
+        while (opModeIsActive()&& elapsedTime.seconds()<timeOut && !isColorFound(colorString)){
+
+            heading = hardwarePushBot.getAngle();
+            error = 0-heading; // desrired - current heading is the error
+            integralError = integralError + error*0.025;
+
+            hardwarePushBot.mecanumDrive(drive_power,strafe_power,-(error*GAIN_PROP+integralError*GAIN_INT)); // the multiplication of 0.015 is a gain to make the turn power small (not close to 1, which is maximum)
+        }
+        hardwarePushBot.mecanumDrive(0,0.0,0.0);
+    }
+
+
 }
