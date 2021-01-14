@@ -72,7 +72,7 @@ public class Teleop_Basic_Iterative extends OpMode
 
     //private Servo frontArm = null;
 
-    HardwarePushBot hardwarePushBot = new HardwarePushBot();
+    HardwarePushBotNew hardwarePushBot = new HardwarePushBotNew();
 
     double masterPowerScaleDrive = 1.0;
     double masterPowerScaleTurn = 1.0;
@@ -102,11 +102,12 @@ public class Teleop_Basic_Iterative extends OpMode
         // step (using the FTC Robot Controller app on the phone).
 
         initHardwareMap();
-        hardwarePushBot.wobbleGoalHand.setPosition(0.0);// Forward position
+
         hardwarePushBot.wobbleGoalFinger.setPosition(1.0); // closed finger
-        hardwarePushBot.wobbleGoalArm.setDirection(DcMotor.Direction.REVERSE);
-        hardwarePushBot.wobbleGoalArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        hardwarePushBot.wobbleGoalArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+       // hardwarePushBot.wobbleGoalArm.setDirection(DcMotor.Direction.REVERSE);
+        //hardwarePushBot.wobbleGoalArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+       // hardwarePushBot.wobbleGoalArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //hardwarePushBot.shootingWheel.setDirection(DcMotor.Direction.FORWARD);
 
 
         // Most robots need the motor on one side to be reversed to drive forward
@@ -188,22 +189,50 @@ public class Teleop_Basic_Iterative extends OpMode
 
         if (gamepad1.start){
             //set the hand to an initial position
-            hardwarePushBot.wobbleGoalHand.setPosition(0.0);
+            hardwarePushBot.wobbleGoalFinger.setPosition(0.0);
         }
         if (gamepad1.back){
             //set the front arm to an initial position
-            hardwarePushBot.wobbleGoalHand.setPosition(1.0);
+            hardwarePushBot.wobbleGoalFinger.setPosition(1.0);
         }
-        if (gamepad1.left_bumper){
+        if (gamepad2.left_bumper){
             //set the front arm to an initial position
             hardwarePushBot.wobbleGoalFinger.setPosition(1.0);
         }
-        if (gamepad1.right_bumper){
+        if (gamepad2.right_bumper){
             //set the front arm to an initial position
             hardwarePushBot.wobbleGoalFinger.setPosition(0.0);
         }
 
-        hardwarePushBot.wobbleGoalArm.setPower(upDown*0.25);
+        hardwarePushBot.wobbleGoalArm.setPower(upDown);
+
+        if (gamepad2.a){
+            hardwarePushBot.shootingWheel.setPower(1);
+        }
+
+        if (gamepad2.x){
+            hardwarePushBot.shootingWheel.setPower(0);
+        }
+
+        if (gamepad2.b){
+            hardwarePushBot.shootingWheel.setPower(0.8);
+        }
+
+      /*  if (gamepad2.start){
+            hardwarePushBot.shootingTrigger.setPosition(1.0);
+        }
+        */
+
+
+        if (gamepad2.start){
+            hardwarePushBot.ringIntake.setPower(1);
+        }
+
+        if (gamepad2.back){
+            hardwarePushBot.ringIntake.setPower(0);
+        }
+
+
 
 
 
