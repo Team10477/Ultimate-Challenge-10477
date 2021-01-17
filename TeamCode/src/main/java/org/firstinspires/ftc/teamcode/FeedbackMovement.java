@@ -1,15 +1,19 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.text.style.TtsSpan;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+//import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
 public class FeedbackMovement {
 
@@ -66,6 +70,16 @@ public class FeedbackMovement {
         robot.setWheelPower(leftFrontPower, rightFrontPower, leftRearPower, rightRearPower );
     }
 
+    public void driveWithFeedback(HardwarePushBot robot, double drivePower, double strafePower, Telemetry telemetry) {
+        heading = getAngle();
+        telemetry.addData("IMU Angle: ", heading);
+        telemetry.update();
+        error = (0-heading);
+        integralError = integralError + (0-heading)*0.05;
+        deltaTurn = error*GAIN_PROP + integralError*GAIN_INT;
+
+        driveWithAngle(drivePower,strafePower, deltaTurn, robot);
+    }
     public void driveWithFeedback(HardwarePushBot robot, double drivePower, double strafePower) {
         heading = getAngle();
         error = (0-heading);
@@ -74,11 +88,10 @@ public class FeedbackMovement {
 
         driveWithAngle(drivePower,strafePower, deltaTurn, robot);
     }
-
     public void initIntegralError(double power, HardwarePushBot robot) {
         integralError=0;
         error = 0;
-        driveWithAngle(0, power,0, robot);
+        driveWithAngle(0, 0,0, robot);
         //  resetAngle();
     }
 

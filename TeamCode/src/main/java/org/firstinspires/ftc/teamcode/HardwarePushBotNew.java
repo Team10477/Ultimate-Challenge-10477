@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -16,7 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-public class HardwarePushBot {
+public class HardwarePushBotNew {
 
     /**
      * Four mecanum wheels.
@@ -25,13 +24,20 @@ public class HardwarePushBot {
     public DcMotor rightBackWheel = null;
     public DcMotor leftFrontWheel = null;
     public DcMotor rightFrontWheel = null;
+
+    /*
+        Intake, Shooting, and Wobble Goal DC Motors
+     */
     public DcMotor ringIntake = null;
+    public DcMotor shootingWheel = null;
+    public DcMotor wobbleGoalArm = null;
 
     /**
      * Two color Sensors
      */
     public RevColorSensorV3 leftColorSensor = null;
     public RevColorSensorV3 rightColorSensor = null;
+    public RevColorSensorV3 frontColorSensor = null;
 
     /**
      * Touch Sensors
@@ -43,7 +49,8 @@ public class HardwarePushBot {
     /**
      * Servos
      **/
-    public Servo wobbleGoalArm;
+    public Servo wobbleGoalFinger = null;
+    public Servo shootingTrigger = null;
 
     double leftFrontPower = 0;
     double rightFrontPower = 0;
@@ -66,10 +73,12 @@ public class HardwarePushBot {
 
     public void init(HardwareMap hwMap) {
         mapWheels(hwMap);
-        mapWobbleArmServo(hwMap);
+        mapWobbleArm(hwMap);
         mapTouchSensor(hwMap);
         mapColorSensor(hwMap);
         mapRingIntake(hwMap);
+        mapWobbleArm(hwMap);
+        mapShootingWheel(hwMap);
     }
 
     public void mapWheels(HardwareMap hwMap) {
@@ -82,19 +91,26 @@ public class HardwarePushBot {
     public void mapRingIntake(HardwareMap hwMap) {
         ringIntake = hwMap.get(DcMotor.class, "ring_intake");
     }
-    public void mapWobbleArmServo(HardwareMap hwMap) {
-        wobbleGoalArm = hwMap.get(Servo.class, "servo"); // Check servo config. in RC
+    public void mapWobbleArm(HardwareMap hwMap) {
+        wobbleGoalArm = hwMap.get(DcMotor.class, "wobble_arm");
+        wobbleGoalFinger = hwMap.get(Servo.class, "wobble_finger");
+    }
+
+    public void mapShootingWheel(HardwareMap hwMap){
+        shootingWheel = hwMap.get(DcMotor.class, "shooting_wheel");
+        shootingTrigger = hwMap.get(Servo.class, "shooting_trigger");
     }
 
     public void mapTouchSensor(HardwareMap hwMap) {
-        leftTouchSensor = hwMap.get(DigitalChannel.class, "touch_sensor");  // Check servo config. in RC
-      //  rightTouchSensor = hwMap.get(DigitalChannel.class, "touch_sensor_right");  // Check servo config. in RC
+        //leftTouchSensor = hwMap.get(DigitalChannel.class, "touch_sensor");  // Check servo config. in RC
+        //rightTouchSensor = hwMap.get(DigitalChannel.class, "touch_sensor_right");  // Check servo config. in RC
         frontTouchSensor = hwMap.get(DigitalChannel.class, "touch_sensor_front");  // Check servo config. in RC
     }
 
     public void mapColorSensor(HardwareMap hwMap) {
-        leftColorSensor = hwMap.get(RevColorSensorV3.class, "color_sensor");  // Check servo config. in RC
+        leftColorSensor = hwMap.get(RevColorSensorV3.class, "color_sensor_left");  // Check servo config. in RC
         rightColorSensor = hwMap.get(RevColorSensorV3.class, "color_sensor_right");  // Check servo config. in RC
+        frontColorSensor = hwMap.get(RevColorSensorV3.class,"color_sensor_front");
 
     }
 
@@ -120,9 +136,7 @@ public class HardwarePushBot {
         rightBackWheel.setDirection(DcMotor.Direction.REVERSE);
     }
 
-    public void setPosition(double position) {
-        wobbleGoalArm.setPosition(position);
-    }
+
 
     public void enableColorSensor(RevColorSensorV3 colSensor, HardwareMap hwMap) {
         float hsvValues[] = {0F, 0F, 0F};
