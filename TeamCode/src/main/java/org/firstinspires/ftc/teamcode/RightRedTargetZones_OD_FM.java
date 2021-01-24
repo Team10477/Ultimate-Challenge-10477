@@ -95,32 +95,29 @@ public class RightRedTargetZones_OD_FM extends LinearOpMode {
                 drivewWithFeedback_FBM_Colors(-0.3, 0.0, 2.0, "WHITE");
                 break;
             case 2 :
-                //Go to Red
-                drivewWithFeedback_FBM_Colors(-0.5, 0.0, 6.0, "RED");
-
-                //Go to Red
-                drivewWithFeedback_FBM_Colors(-0.5, 0.0, 2.0, "RED");
-
-                //Move forward a little
-                drivewWithFeedback_FBM(-0.4, 0, 0.5);
-
-                //Go to Red
-                drivewWithFeedback_FBM_Colors(0.0, -0.4, 2.0, "RED");
-
                 //Go to the right
-                drivewWithFeedback_FBM(0, -0.4, 0.5);
+                drivewWithFeedback_FBM(0, 0.4, 1.5);
+
+                //Go to Red
+                drivewWithFeedback_FBM_Colors(-0.5, 0.0, 4.0, "RED");
+
+                //Go to Red
+                drivewWithFeedback_FBM_Colors(-0.5, 0.0, 4.0, "RED");
+
+                //Move Forward
+                drivewWithFeedback_FBM(-0.5, 0, 0.5);
+
+                //Go to Red
+                drivewWithFeedback_FBM_Colors(0, -0.5, 4.0, "RED");
                 break;
             case 3:
                 //Go to the right
-                drivewWithFeedback_FBM(0, 0.4, 1.0);
+                drivewWithFeedback_FBM(0, 0.4, 1.5);
 
                 //Detect Red 3 times
                 drivewWithFeedback_FBM_Colors(-0.5, 0.0, 6.0, "RED");
                 drivewWithFeedback_FBM_Colors(-0.5, 0.0, 2.0, "RED");
                 drivewWithFeedback_FBM_Colors(-0.5, 0.0, 5.0, "RED");
-
-                //Move forward a little
-                drivewWithFeedback_FBM(-0.5, 0, 0.5);
                 break;
         }
     }
